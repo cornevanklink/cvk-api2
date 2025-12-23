@@ -1,0 +1,36 @@
+name: Build and Publish Docker image
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/cvk-serverless-base:latest
+            ghcr.io/${{ github.repository_owner }}/cvk-serverless-base:${{ github.sha }}

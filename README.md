@@ -66,4 +66,26 @@ A simple `Dockerfile` is included for container-based deployments.
 
 ---
 
-If you want, I can also add a CI job to build and automatically package and/or publish an image to a registry. 👍
+## Continuous Integration (CI) — GitHub Actions ✅
+
+I added two simple GitHub Actions workflows under `.github/workflows`:
+
+- `package-zip.yml` — runs on push to `main` and on Release:
+  - Installs dependencies, runs `npm run package:function`, uploads `function.zip` as an artifact
+  - On release publishes, it also attaches `function.zip` to the GitHub Release
+
+- `docker-publish.yml` — runs on push to `main` and on Release:
+  - Builds a multi-arch Docker image and **pushes to GitHub Container Registry (GHCR)** as
+    `ghcr.io/<owner>/cvk-serverless-base:latest` and with the current commit SHA tag
+
+### Notes / usage 🔧
+- GHCR: the workflows use the automatic `GITHUB_TOKEN` to authenticate to `ghcr.io`. Ensure repository permissions allow Actions to write packages (default for most repos). If you prefer Docker Hub, I can switch the workflow to use `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` secrets instead.
+- The ZIP workflow attaches the `function.zip` artifact which you can download from the workflow run or from the release.
+
+---
+
+If you want, I can also:
+- Add a Release workflow that automatically creates a GitHub Release when a tag is pushed, or
+- Add a workflow to publish the ZIP as a release artifact and the Docker image on every tagged release only.
+
+Just tell me which flavor you prefer and I’ll update the workflows.
