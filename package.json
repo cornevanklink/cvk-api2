@@ -1,0 +1,18 @@
+{
+  "name": "cvk-serverless-base",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Base Node.js app using node-fetch (ESM), ready for Scaleway Serverless",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "NODE_ENV=development node index.js",
+    "package:function": "zip -r function.zip index.js package.json node_modules"
+  },
+  "keywords": ["serverless","scaleway","node","node-fetch","esm"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
